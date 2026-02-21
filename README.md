@@ -5,9 +5,6 @@
 The two primary LDO architectures differ in the choice of pass transistor: NMOS or PMOS.  
 The block-level structures are shown below.
 
-<p align="center">
-<img src="docs/pmos_nmos_architecture.png" width="700">
-</p>
 
 Both architectures consist of:
 
