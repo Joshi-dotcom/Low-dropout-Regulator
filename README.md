@@ -1,19 +1,44 @@
+# PMOS-Based Low Dropout (LDO) Voltage Regulator – 90nm CMOS
+
+## Overview
+
+This repository presents the transistor-level design and simulation of a PMOS-based Low Dropout (LDO) voltage regulator implemented in 90nm CMOS technology.
+
+The objective is to design a stable, low-noise, high-PSRR regulator capable of delivering up to 100mA load current with low dropout voltage and robust loop stability.
+
+The architecture includes a high-gain error amplifier, PMOS pass device, bandgap reference, feedback network, and frequency compensation.
+
 ---
 
-## PMOS and NMOS LDO Architectures
+## Design Specifications
 
-The two primary LDO architectures differ in the choice of pass transistor: NMOS or PMOS.  
-The block-level structures are shown below.
+| Parameter | Target Value |
+|------------|--------------|
+| Technology | 90nm CMOS |
+| Input Voltage | 1.4V – 1.8V |
+| Output Voltage | 1.2V |
+| Maximum Load Current | 100mA |
+| Dropout Voltage | ≤ 200mV @ 100mA |
+| Line Regulation | ≤ 1mV/V |
+| Load Regulation | ≤ 1mV |
+| Phase Margin | ≥ 60° |
+| PSRR @ 1kHz | ≥ 60dB |
+| PSRR @ 1MHz | ≥ 40dB |
+| Quiescent Current | < 100µA |
 
+---
 
-Both architectures consist of:
+## Architecture
 
-- Error Amplifier (EA)
-- Pass Transistor
-- Feedback Network (R1, R2)
-- Load (ZL)
+The LDO consists of:
 
-The key distinction lies in the gate drive requirements and dropout behavior of the pass device.
+- PMOS Pass Transistor
+- Two-Stage Error Amplifier (OTA-based)
+- 1.2V Bandgap Reference
+- Resistive Feedback Network
+- Miller Compensation Network
+
+The PMOS pass element enables low dropout operation without requiring a charge pump.
 
 ---
 
@@ -22,22 +47,59 @@ The key distinction lies in the gate drive requirements and dropout behavior of 
 | Feature | PMOS LDO | NMOS LDO |
 |----------|-----------|-----------|
 | Pass Device | PMOS | NMOS |
-| Dropout Mechanism | VSD(sat) limited | RDS(on) limited |
-| Gate Drive Requirement | No charge pump required | Requires gate voltage > VIN |
-| Loop Gain | Higher intrinsic gain | Moderate |
-| Complexity | Moderate | Higher (gate boosting required) |
-| Area | Larger | Smaller |
-| Speed | Slower | Faster |
-| Design Suitability | Low-power analog systems | High-current applications |
+| Dropout Voltage | Low (VSD(sat)) | Very Low (RDS(on)-based) |
+| Gate Drive Requirement | No charge pump required | Often requires charge pump for full enhancement |
+| Loop Gain | Generally higher | Moderate |
+| Output Resistance | Higher | Lower at high load |
+| Area | Larger (lower mobility) | Smaller |
+| Speed | Slower (hole mobility) | Faster (electron mobility) |
+| Design Complexity | Moderate | Higher (gate boosting required) |
+
+### Reason for Selecting PMOS
+
+Although NMOS devices offer lower on-resistance and faster response due to higher electron mobility, they require a gate voltage higher than the input supply to fully turn on in low-dropout conditions. This typically necessitates a charge pump, increasing design complexity and power consumption.
+
+A PMOS-based topology avoids the need for a charge pump, simplifies implementation, and provides sufficient loop gain for stable operation, making it well-suited for moderate-load, low-power analog applications.
 
 ---
 
-### Design Choice Justification
+## Simulation Environment
 
-Although NMOS pass devices provide lower on-resistance and faster transient response, they require a boosted gate voltage to maintain low dropout operation. This typically necessitates a charge pump, increasing design complexity and power overhead.
+- Cadence Virtuoso
+- Spectre Simulator
+- 90nm CMOS PDK
 
-A PMOS-based LDO avoids the need for gate boosting circuitry, simplifies implementation, and provides sufficient loop gain for stable regulation. For moderate load currents and low-power applications, PMOS offers a balanced trade-off between performance and implementation complexity.
+---
 
+## Analyses Performed
 
-**Author**
-Joshita Meesala
+- DC Operating Point
+- Line Regulation
+- Load Regulation
+- Transient Load Step Response
+- Loop Gain & Phase Margin
+- PSRR Analysis
+- Output Noise Analysis
+
+---
+
+## Results Summary
+
+The regulator maintains a stable 1.2V output across line and load variations with phase margin exceeding 60° under worst-case conditions. The PMOS pass device enables low-dropout performance without additional gate boosting circuitry.
+
+---
+
+## Future Enhancements
+
+- Adaptive Biasing for Reduced Quiescent Current
+- Full PVT Corner Analysis
+- Monte Carlo Simulations
+- Layout and Parasitic Extraction
+- Noise Optimization for RF Applications
+
+---
+
+## Author
+
+Meesala Joshita  
+Analog / Mixed-Signal IC Design
